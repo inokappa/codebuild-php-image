@@ -1,0 +1,15 @@
+version: 0.2
+environment_variables:
+  plaintext:
+    ARTIFACTS_BUCKET: codebuild-php-artifact
+phases:
+  build:
+    commands:
+      - cd ${CODEBUILD_SRC_DIR} && bash run_test.sh
+  post_build:
+    commands:
+      - cd ${CODEBUILD_SRC_DIR}/post_build && php generate_result.php
+      - cd ${CODEBUILD_SRC_DIR}/post_build && php put_result_to_s3.php
+artifacts:
+  files:
+    - result.xml
